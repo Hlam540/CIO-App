@@ -1,0 +1,90 @@
+{% extends "base.html" %}
+
+{% block title %}Officer Dashboard - CIO Hub{% endblock %}
+
+{% block content %}
+<div class="card">
+    <div class="layout-row">
+        <div>
+            <h1 class="page-heading">Officer Dashboard</h1>
+            <p class="page-subtitle">Welcome back, <strong>{{ user.get_full_name|default:user.username }}</strong></p>
+        </div>
+        <span class="role-badge role-executive">Executive Member</span>
+    </div>
+</div>
+
+<div class="card">
+    <h2>Organization Statistics</h2>
+    <div class="metric-grid">
+        <div class="metric">
+            <div class="metric-value">{{ total_members }}</div>
+            <div class="metric-label">Total Members</div>
+        </div>
+        <div class="metric">
+            <div class="metric-value" style="color: #995d00;">{{ executive_count }}</div>
+            <div class="metric-label">Officers</div>
+        </div>
+        <div class="metric">
+            <div class="metric-value" style="color: #0f7250;">{{ general_count }}</div>
+            <div class="metric-label">General</div>
+        </div>
+        <div class="metric">
+            <div class="metric-value" style="color: #1c9b65;">{{ attendance_rate }}%</div>
+            <div class="metric-label">Attendance Rate</div>
+        </div>
+        <div class="metric">
+            <div class="metric-value">{{ upcoming_event_count }}</div>
+            <div class="metric-label">Upcoming Events</div>
+        </div>
+    </div>
+    <div style="display:flex; gap:1rem; flex-wrap:wrap; margin-top:1rem;">
+        <div class="subtle-box" style="flex:1; min-width:140px;">
+            <p><strong>{{ total_posts }}</strong> discussion threads · <strong>{{ total_documents }}</strong> resources</p>
+        </div>
+    </div>
+</div>
+
+<div class="grid-cards">
+    <div class="card">
+        <h2>🔗 Central Resources</h2>
+        <p>View the member-facing resource directory that consolidates key documents and links.</p>
+        <a href="{% url 'resource_directory' %}" class="btn btn-primary" style="margin-top: 1rem; display: inline-block;">Open Directory</a>
+    </div>
+
+    <div class="card">
+        <h2>👥 Member Management</h2>
+        <p>View all members and their contact information.</p>
+        <a href="{% url 'member_list' %}" class="btn btn-primary" style="margin-top: 1rem; display: inline-block;">View Members</a>
+    </div>
+
+    <div class="card">
+        <h2>📁 Document Management</h2>
+        <p>Tag, organize, and edit resource links or uploaded files so they do not get lost.</p>
+        <a href="{% url 'document_management' %}" class="btn btn-primary" style="margin-top: 1rem; display: inline-block;">Manage Documents</a>
+    </div>
+
+    <div class="card">
+        <h2>📄 Exec Onboarding </h2>
+        <p>Create & view all onboarding documents from past executive members.</p>
+        <a href="{% url 'exec_onboarding' %}" class="btn btn-primary" style="margin-top: 1rem; display: inline-block;">View Onboarding Docs</a>
+    </div>
+
+    <div class="card">
+        <h2>📘 Member Guide</h2>
+        <p>Create onboarding guides so new members understand expectations and first-step tasks.</p>
+        <a href="{% url 'member_guide_management' %}" class="btn btn-primary" style="margin-top: 1rem; display: inline-block;">Manage Guides</a>
+    </div>
+
+    <div class="card">
+        <h2>📜 Constitution Summary</h2>
+        <p>Publish condensed constitution highlights so members can understand rules quickly.</p>
+        <a href="{% url 'constitution_summary' %}" class="btn btn-primary" style="margin-top: 1rem; display: inline-block;">Open Summary</a>
+    </div>
+
+    <div class="card">
+        <h2>🗓️ Event Calendar</h2>
+        <p>Add events to the shared calendar and update member attendance for each event.</p>
+        <a href="{% url 'event_calendar' %}" class="btn btn-primary" style="margin-top: 1rem; display: inline-block;">Manage Events</a>
+    </div>
+</div>
+{% endblock %}

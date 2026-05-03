@@ -1,0 +1,65 @@
+{% extends "base.html" %}
+
+{% block title %}My Attendance - CIO Hub{% endblock %}
+
+{% block content %}
+<div class="card">
+    <div class="layout-row">
+        <h1>📊 My Attendance</h1>
+        <a href="{% url 'member_dashboard' %}" class="btn btn-secondary">← Back to Dashboard</a>
+    </div>
+    <p style="margin-top: 0.5rem;">Your personal participation history.</p>
+</div>
+
+<!-- Summary -->
+<div class="card metric-grid">
+    <div class="metric">
+        <div class="metric-value">{{ total }}</div>
+        <div class="metric-label">Total Events</div>
+    </div>
+    <div class="metric">
+        <div class="metric-value" style="color: #1c9b65;">{{ present_count }}</div>
+        <div class="metric-label">Attended</div>
+    </div>
+    <div class="metric">
+        <div class="metric-value {% if total > 0 %}text-primary{% else %}text-muted{% endif %}">
+            {% if total > 0 %}{{ rate }}%{% else %}—{% endif %}
+        </div>
+        <div class="metric-label">Rate</div>
+    </div>
+</div>
+
+<!-- Attendance Records Table -->
+<div class="card">
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Event</th>
+                <th>Date</th>
+                <th>Status</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for record in records %}
+            <tr>
+                <td>{{ record.event_name }}</td>
+                <td>{{ record.event_date|date:"M d, Y" }}</td>
+                <td>
+                    {% if record.present %}
+                        <span class="role-badge status-present">Present</span>
+                    {% else %}
+                        <span class="role-badge status-absent">Absent</span>
+                    {% endif %}
+                </td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="3" class="empty-state">
+                    No attendance records yet. Attend some events to see your history here!
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

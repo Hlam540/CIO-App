@@ -1,0 +1,53 @@
+{% extends "base.html" %}
+
+{% block title %}Member Home - CIO Hub{% endblock %}
+
+{% block content %}
+<div class="card">
+    <div class="layout-row">
+        <div>
+            <h1 class="page-heading">Member Home</h1>
+            <p class="page-subtitle">Welcome back, <strong>{{ user.get_full_name|default:user.username }}</strong></p>
+        </div>
+        <span class="role-badge role-general">General Member</span>
+    </div>
+</div>
+
+<div class="grid-cards">
+    <div class="card">
+        <h2>🔗 Central Resources</h2>
+        <p>Access your CIO's Google Drive, SharePoint, and key links in one searchable directory.</p>
+        <a href="{% url 'resource_directory' %}" class="btn btn-primary" style="margin-top: 1rem; display: inline-block;">Open Resources</a>
+    </div>
+
+    <div class="card">
+        <h2>🌟 Interest Hub</h2>
+        <p>Learn about the club's mission and explore our sub-teams.</p>
+        <a href="{% url 'interest_hub' %}" class="btn btn-primary" style="margin-top: 1rem; display: inline-block;">Explore</a>
+    </div>
+
+    <div class="card">
+        <h2>📖 Member Guide</h2>
+        <p>View onboarding guides, role expectations, and first-step instructions in one place.</p>
+        <a href="{% url 'member_guide' %}" class="btn btn-primary" style="margin-top: 1rem; display: inline-block;">View Guides</a>
+    </div>
+
+    <div class="card">
+        <h2>📊 My Attendance</h2>
+        <p>View your attendance history after officers record event participation.</p>
+        <a href="{% url 'my_attendance' %}" class="btn btn-primary" style="margin-top: 1rem; display: inline-block;">View Attendance</a>
+    </div>
+
+    <div class="card">
+        <h2>📘 Constitution Summary</h2>
+        <p>Read simplified policy highlights without scanning a long constitution PDF.</p>
+        <a href="{% url 'constitution_summary' %}" class="btn btn-primary" style="margin-top: 1rem; display: inline-block;">Read Summary</a>
+    </div>
+
+    <div class="card">
+        <h2>🗓️ Event Calendar</h2>
+        <p>See upcoming meetings, times, and locations so you always know where to go.</p>
+        <a href="{% url 'event_calendar' %}" class="btn btn-primary" style="margin-top: 1rem; display: inline-block;">View Events</a>
+    </div>
+</div>
+{% endblock %}

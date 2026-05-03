@@ -1,0 +1,61 @@
+{% extends "base.html" %}
+
+{% block title %}Membership Application - CIO Hub{% endblock %}
+
+{% block content %}
+<div class="card">
+    <div class="layout-row">
+        <div>
+            <h1 class="page-heading">Membership Application</h1>
+            <p class="page-subtitle">Submit your interest so officers can review and follow up.</p>
+        </div>
+        <a href="{% url 'member_dashboard' %}" class="btn btn-secondary">Back to Dashboard</a>
+    </div>
+</div>
+
+<div class="card">
+    <h2>Submit Application</h2>
+    {% if has_pending_application %}
+        <p>You already have a pending application. Officers will review it soon.</p>
+    {% else %}
+        <form method="POST" style="display: grid; gap: 1rem; margin-top: 1rem;">
+            {% csrf_token %}
+            <div>
+                <label class="input-label">Why do you want to join?</label>
+                <textarea name="reason" class="input-field" rows="5" required></textarea>
+            </div>
+            <button type="submit" class="btn btn-primary" style="justify-self: start;">Submit Application</button>
+        </form>
+    {% endif %}
+</div>
+
+<div class="card">
+    <h2>Application History</h2>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Date</th>
+                <th>Status</th>
+                <th>Reason</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for application in applications %}
+                <tr>
+                    <td>{{ application.created_at|date:"M d, Y" }}</td>
+                    <td>
+                        <span class="role-badge status-{{ application.status }}">
+                            {{ application.get_status_display }}
+                        </span>
+                    </td>
+                    <td>{{ application.reason }}</td>
+                </tr>
+            {% empty %}
+                <tr>
+                    <td colspan="3" class="empty-state">No applications submitted yet.</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

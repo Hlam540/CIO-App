@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}CIO Hub{% endblock %}</title>
+    <style>
+        @import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap");
+
+        :root {
+            --bg: #f3f6fb;
+            --bg-accent: #e9eef9;
+            --surface: #ffffff;
+            --surface-soft: #f7f9fd;
+            --text: #172033;
+            --text-muted: #60708f;
+            --primary: #3559e0;
+            --primary-strong: #243fa8;
+            --border: #dce4f1;
+            --danger: #e74c3c;
+            --danger-strong: #c0392b;
+            --warning: #f39c12;
+            --success: #1c9b65;
+            --shadow: 0 14px 34px rgba(17, 40, 82, 0.08);
+            --radius-lg: 16px;
+            --radius-md: 10px;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            background:
+                radial-gradient(1200px 500px at 50% -200px, #dfe8ff 0%, rgba(223, 232, 255, 0) 70%),
+                linear-gradient(180deg, var(--bg-accent) 0%, var(--bg) 35%, var(--bg) 100%);
+            color: var(--text);
+            min-height: 100vh;
+        }
+        nav {
+            position: sticky;
+            top: 0;
+            z-index: 20;
+            background: rgba(23, 32, 51, 0.86);
+            backdrop-filter: blur(12px);
+            color: #fff;
+            padding: 1rem 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+        }
+        .nav-inner {
+            width: min(1120px, 94vw);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        nav a {
+            color: #dde7ff;
+            text-decoration: none;
+            margin-left: 0.9rem;
+            font-weight: 500;
+            padding: 0.4rem 0.6rem;
+            border-radius: 8px;
+            transition: background 0.2s ease, color 0.2s ease;
+        }
+        nav a:hover { background: rgba(255,255,255,0.14); color: #fff; }
+        .nav-brand {
+            font-size: 1.2rem;
+            font-weight: 800;
+            letter-spacing: 0.2px;
+        }
+        .nav-pill {
+            display: inline-block;
+            font-size: 0.78rem;
+            margin-left: 0.5rem;
+            padding: 0.22rem 0.5rem;
+            border-radius: 999px;
+            background: rgba(255,255,255,0.16);
+            color: #f8fbff;
+            vertical-align: middle;
+            font-weight: 600;
+        }
+        .container {
+            width: min(1120px, 94vw);
+            margin: 2.25rem auto 3rem;
+        }
+        .card {
+            background: var(--surface);
+            border-radius: var(--radius-lg);
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            box-shadow: var(--shadow);
+            border: 1px solid var(--border);
+        }
+        .btn {
+            display: inline-block;
+            padding: 0.7rem 1.15rem;
+            border-radius: 9px;
+            text-decoration: none;
+            font-weight: 600;
+            cursor: pointer;
+            border: none;
+            font-size: 0.95rem;
+            transition: transform 0.15s ease, box-shadow 0.2s ease, background 0.2s ease;
+        }
+        .btn:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 10px 20px rgba(32, 55, 112, 0.18);
+        }
+        .btn-primary { background: var(--primary); color: white; }
+        .btn-primary:hover { background: var(--primary-strong); }
+        .btn-google {
+            background: white;
+            color: #1f293d;
+            border: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.8rem 1.5rem;
+        }
+        .btn-google:hover { background: #f8fbff; border-color: #b9c7df; }
+        .btn-danger { background: var(--danger); color: white; }
+        .btn-danger:hover { background: var(--danger-strong); }
+        .btn-secondary {
+            background: #edf2ff;
+            color: #233250;
+            border: 1px solid #d4def1;
+        }
+        .btn-secondary:hover { background: #dde7ff; }
+        .role-badge {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0.36rem 0.75rem;
+            border-radius: 20px;
+            font-size: 0.79rem;
+            font-weight: 600;
+            line-height: 1.15;
+            min-height: 2.25rem;
+            text-align: center;
+        }
+        .role-executive { background: #fff2db; color: #995d00; border: 1px solid #ffd79a; }
+        .role-general { background: #e7f9f1; color: #0f7250; border: 1px solid #bcefd8; }
+        /* Status colors */
+        .status-pending { background: #fff1da; color: #936007; border: 1px solid #ffd28f; }
+        .status-approved { background: #e5f9f1; color: #0f7250; border: 1px solid #bdecd9; }
+        .status-denied { background: #ffe9e7; color: #ab3023; border: 1px solid #ffc4be; }
+        .status-present { background: #e5f9f1; color: #0f7250; border: 1px solid #bdecd9; }
+        .status-absent { background: #ffe9e7; color: #ab3023; border: 1px solid #ffc4be; }
+        .border-pending { border-left: 4px solid var(--warning); }
+        .border-approved { border-left: 4px solid var(--success); }
+        .border-denied { border-left: 4px solid var(--danger); }
+        .text-primary { color: #2b3b63; }
+        .text-muted { color: var(--text-muted); }
+        h1 { margin-bottom: 0.35rem; font-size: clamp(1.5rem, 2.4vw, 2rem); }
+        h2 { margin-bottom: 0.85rem; color: #22304b; font-size: 1.25rem; }
+        p { line-height: 1.65; color: var(--text-muted); }
+        .hero p { max-width: 68ch; margin-inline: auto; }
+        .hero {
+            text-align: center;
+            padding: 4.5rem 1rem 3rem;
+        }
+        .hero h1 { font-size: clamp(2rem, 4vw, 3.2rem); margin-bottom: 1rem; color: #182238; }
+        .hero p { font-size: 1.08rem; margin-bottom: 2rem; }
+        .layout-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+        .grid-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 1.1rem;
+        }
+        .feature-card h2 { margin-bottom: 0.5rem; }
+        .page-heading { margin-bottom: 0.2rem; }
+        .page-subtitle { margin-top: 0.2rem; }
+        .input-label {
+            display: block;
+            margin-bottom: 0.35rem;
+            font-size: 0.92rem;
+            color: #2b3b5c;
+            font-weight: 600;
+        }
+        .input-field, textarea.input-field, select.input-field {
+            width: 100%;
+            padding: 0.67rem 0.75rem;
+            border: 1px solid #ccdaef;
+            border-radius: var(--radius-md);
+            font-size: 0.95rem;
+            background: #fff;
+            color: var(--text);
+        }
+        .input-field:focus {
+            outline: none;
+            border-color: #84a4f7;
+            box-shadow: 0 0 0 4px rgba(92, 128, 236, 0.14);
+        }
+        .table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        .table thead tr {
+            border-bottom: 2px solid #e2eaf8;
+            text-align: left;
+        }
+        .table th, .table td {
+            padding: 0.8rem;
+        }
+        .table tbody tr { border-bottom: 1px solid #edf1f7; }
+        .table tbody tr:hover { background: #f9fbff; }
+        .subtle-box {
+            background: var(--surface-soft);
+            border: 1px solid #e2e8f4;
+            border-radius: var(--radius-md);
+            padding: 0.95rem;
+        }
+        .empty-state {
+            text-align: center;
+            color: #8090ae;
+            padding: 2.8rem 1.2rem;
+        }
+        .metric-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+            gap: 1rem;
+        }
+        .metric {
+            text-align: center;
+            background: var(--surface-soft);
+            border: 1px solid #dde6f5;
+            border-radius: var(--radius-md);
+            padding: 1.2rem 0.8rem;
+        }
+        .metric-value { font-size: 1.8rem; font-weight: 800; color: #223455; }
+        .metric-label { font-size: 0.9rem; color: #7687a6; }
+        .message {
+            border-left: 4px solid var(--primary);
+            background: #edf2ff;
+            color: #20355a;
+        }
+        .auth-card {
+            max-width: 460px;
+            margin: 2.2rem auto;
+        }
+        @media (max-width: 740px) {
+            .container { width: min(1120px, 92vw); }
+            .card { padding: 1.2rem; }
+            .hero { padding-top: 3.2rem; }
+        }
+    </style>
+</head>
+<body>
+    <nav>
+        <div class="nav-inner">
+            <span class="nav-brand">CIO Hub</span>
+            <div>
+                {% if user.is_authenticated %}
+                    <span class="nav-pill">{{ user.get_full_name|default:user.username }}</span>
+                    {% if user.profile.is_user_admin %}
+                        <a href="{% url 'user_role_management' %}">Role Management</a>
+                    {% else %}
+                        <a href="{% url 'dashboard' %}">Dashboard</a>
+                        <a href="{% url 'resource_directory' %}">Resources</a>
+                        <a href="{% url 'post_list' %}">Messages</a>
+                        <a href="{% url 'user_profile' %}">Profile</a>
+                    {% endif %}
+                    <a href="{% url 'account_logout' %}">Logout</a>
+                {% else %}
+                    <a href="{% url 'account_login' %}">Login</a>
+                {% endif %}
+            </div>
+        </div>
+    </nav>
+
+    <div class="container">
+        {% if messages %}
+            {% for message in messages %}
+                <div class="card message">
+                    {{ message }}
+                </div>
+            {% endfor %}
+        {% endif %}
+
+        {% block content %}{% endblock %}
+    </div>
+</body>
+</html>

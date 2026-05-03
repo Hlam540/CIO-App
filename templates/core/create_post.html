@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+
+{% block title %}Start Thread - CIO Hub{% endblock %}
+
+{% block content %}
+<div class="card">
+    <div class="layout-row">
+        <div>
+            <h1 class="page-heading">Start Thread</h1>
+            <p class="page-subtitle">Any logged-in member can start a discussion thread. Executive-created threads will still be labeled clearly in the message board.</p>
+        </div>
+        <a href="{% url 'post_list' %}" class="btn btn-secondary">Back to Messages</a>
+    </div>
+</div>
+
+<div class="card">
+    <form method="POST" style="display:grid; gap:1rem;">
+        {% csrf_token %}
+        <div>
+            <label class="input-label">Title</label>
+            <input class="input-field" type="text" name="title" required>
+        </div>
+        <div>
+            <label class="input-label">Content</label>
+            <textarea class="input-field" name="content" rows="8" required></textarea>
+        </div>
+        <button type="submit" class="btn btn-primary" style="justify-self:start;">Post Thread</button>
+    </form>
+</div>
+{% endblock %}

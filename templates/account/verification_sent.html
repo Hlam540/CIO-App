@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+
+{% block title %}Verify Your Email - CIO Hub{% endblock %}
+
+{% block content %}
+<div class="card auth-card" style="text-align: center;">
+    <div style="margin-bottom: 1.5rem;">
+        <svg width="56" height="56" viewBox="0 0 24 24" fill="none" stroke="#3559e0" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="2" y="4" width="20" height="16" rx="2"/>
+            <path d="M22 7l-10 7L2 7"/>
+        </svg>
+    </div>
+    <h1>Verify Your Email</h1>
+    <p style="margin-bottom: 1.8rem;">We've sent a verification email to your address. Please check your inbox and click the link to activate your account.</p>
+
+    <a href="{% url 'account_login' %}" class="btn btn-secondary" style="width: 100%;">Back to Sign In</a>
+</div>
+{% endblock %}

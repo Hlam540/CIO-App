@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+
+{% block title %}Role Management - CIO Hub{% endblock %}
+
+{% block content %}
+<div class="card">
+    <div class="layout-row">
+        <h1>👥 Role Change History for {{ selected_user.username }}</h1>
+        <a href="{% url 'user_role_management' %}" class="btn btn-secondary">← Back to Dashboard</a>
+    </div>
+    <p style="margin-top: 0.5rem;">View the history of role change made by User Administrator</p>
+</div>
+
+<div class="card">
+    <table>
+        <tr>
+            <th>Changed By</th>
+            <th>Old Role</th>
+            <th>New Role</th>
+            <th>Date</th>
+        </tr>
+
+        {% for log in logs %}
+        <tr>
+            <td>{{ log.changed_by.username }}</td>
+            <td>{{ log.old_role }}</td>
+            <td>{{ log.new_role }}</td>
+            <td>{{ log.timestamp }}</td>
+        </tr>
+        {% empty %}
+        <tr>
+            <td colspan="4">No changes yet.</td>
+        </tr>
+        {% endfor %}
+    </table>
+</div>
+{% endblock %}

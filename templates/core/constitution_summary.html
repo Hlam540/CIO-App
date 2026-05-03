@@ -1,0 +1,70 @@
+{% extends "base.html" %}
+
+{% block title %}Streamlined Constitution - CIO Hub{% endblock %}
+
+{% block content %}
+<div class="card">
+    <div class="layout-row">
+        <div>
+            <h1 class="page-heading">Streamlined Constitution</h1>
+            <p class="page-subtitle">View the official constitution file for this organization.</p>
+        </div>
+        <a href="{% url 'dashboard' %}" class="btn btn-secondary">Back to Dashboard</a>
+    </div>
+</div>
+
+{% if user.profile.is_executive %}
+<div class="card">
+    <h2>Upload Constitution</h2>
+    <form method="POST" enctype="multipart/form-data" style="display: grid; gap: 1rem; margin-top: 1rem;">
+        {% csrf_token %}
+        <div>
+            <label class="input-label">Document Title</label>
+            <input type="text" name="document_title" required placeholder="e.g. Official CIO Constitution" class="input-field">
+        </div>
+        <div>
+            <label class="input-label">Constitution File</label>
+            <input type="file" name="constitution_file" required class="input-field">
+        </div>
+        <div>
+            <label class="input-label">Description (optional)</label>
+            <input type="text" name="document_description" placeholder="Brief note about this version" class="input-field">
+        </div>
+        <p class="text-muted">Uploaded constitutions are saved as central resources with the Constitution tag.</p>
+        <button type="submit" class="btn btn-primary" style="justify-self: start;">Upload Constitution</button>
+    </form>
+</div>
+{% endif %}
+
+{% if constitution_documents %}
+<div class="card">
+    <h2>Uploaded Constitution Files</h2>
+    {% for document in constitution_documents %}
+        <div class="subtle-box" style="margin-top: 0.8rem;">
+            <h3 style="margin-bottom: 0.4rem;">
+                <a href="{{ document.resource_url }}" target="_blank" rel="noopener noreferrer" style="color: #3559e0;">{{ document.title }}</a>
+            </h3>
+            {% if document.description %}
+                <p>{{ document.description }}</p>
+            {% endif %}
+            <p style="font-size:0.85rem; margin-top:0.45rem;">
+                Uploaded by {{ document.uploaded_by.get_full_name|default:document.uploaded_by.username }} · {{ document.created_at|date:"M d, Y" }}
+            </p>
+        </div>
+    {% endfor %}
+</div>
+{% endif %}
+
+{% if not constitution_documents %}
+<div class="card">
+    <h2>Constitution Coming Soon</h2>
+    <div class="subtle-box">
+        {% if user.profile.is_executive %}
+        <p>Use the upload form above to add the official constitution file.</p>
+        {% else %}
+        <p>No constitution file has been published yet.</p>
+        {% endif %}
+    </div>
+</div>
+{% endif %}
+{% endblock %}

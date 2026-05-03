@@ -1,0 +1,71 @@
+{% extends "base.html" %}
+
+{% block title %}Edit Resource - CIO Hub{% endblock %}
+
+{% block content %}
+<div class="card">
+    <div class="layout-row">
+        <h1>Edit Resource</h1>
+        <a href="{% url 'document_management' %}" class="btn btn-secondary">Back to Document Management</a>
+    </div>
+    <p style="margin-top: 0.5rem;">Edit the details of the resource below.</p>
+</div>
+
+<div class="card">
+    <form method="POST" enctype="multipart/form-data" style="display: grid; gap: 1rem; margin-top: 1rem;">
+        {% csrf_token %}
+
+        <div class="grid-cards">
+            <div>
+                <label class="input-label">Title</label>
+                <input type="text" name="title"
+                       value="{{ document.title }}"
+                       required
+                       class="input-field">
+            </div>
+
+            <div>
+                <label class="input-label">Tag</label>
+                <input type="text" name="tag"
+                       value="{{ document.tag }}"
+                       required
+                       class="input-field">
+            </div>
+        </div>
+
+        <div>
+            <input type="url" name="url"
+                value="{% if not document.file %}{{ document.resource_url }}{% endif %}"
+                placeholder="https://docs.google.com/..."
+                class="input-field">
+        </div>
+
+        <div>
+            <label class="input-label">Upload File</label>
+            <input type="file" name="file" class="input-field">
+
+            {% if document.file %}
+                <p class="text-muted" style="margin-top: 0.3rem;">
+                    Current file: {{ document.file.name }}
+                </p>
+            {% endif %}
+        </div>
+
+        <div>
+            <label class="input-label">Description (optional)</label>
+            <input type="text" name="description"
+                   value="{{ document.description }}"
+                   placeholder="Brief description of this resource"
+                   class="input-field">
+        </div>
+
+        <p class="text-muted">
+            Provide either a URL or an uploaded file. Uploaded files will use Django's configured storage.
+        </p>
+
+        <button type="submit" class="btn btn-primary" style="justify-self: start;">
+            Save Changes
+        </button>
+    </form>
+</div>
+{% endblock %}

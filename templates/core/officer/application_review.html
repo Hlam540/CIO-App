@@ -1,0 +1,48 @@
+{% extends "base.html" %}
+
+{% block title %}Application Review - CIO Hub{% endblock %}
+
+{% block content %}
+<div class="card">
+    <div class="layout-row">
+        <h1>📝 Application Review</h1>
+        <a href="{% url 'officer_dashboard' %}" class="btn btn-secondary">← Back to Dashboard</a>
+    </div>
+    <p style="margin-top: 0.5rem;">Review and manage membership applications.</p>
+</div>
+
+{% for app in applications %}
+<div class="card border-{{ app.status }}">
+    <div class="layout-row" style="align-items: flex-start;">
+        <div>
+            <h2 style="margin-bottom: 0.3rem;">{{ app.applicant.get_full_name|default:app.applicant.username }}</h2>
+            <p style="font-size: 0.9rem;">{{ app.applicant.email }} · Applied {{ app.created_at|date:"M d, Y" }}</p>
+        </div>
+        <span class="role-badge status-{{ app.status }}">
+            {{ app.get_status_display }}
+        </span>
+    </div>
+
+    <p class="subtle-box" style="margin: 1rem 0;">{{ app.reason }}</p>
+
+    {% if app.status == 'pending' %}
+    <div style="display: flex; gap: 0.5rem; flex-wrap: wrap;">
+        <form method="POST" action="{% url 'application_decide' app.id 'approved' %}">
+            {% csrf_token %}
+            <button type="submit" class="btn btn-primary">✓ Approve</button>
+        </form>
+        <form method="POST" action="{% url 'application_decide' app.id 'denied' %}">
+            {% csrf_token %}
+            <button type="submit" class="btn btn-danger">✗ Deny</button>
+        </form>
+    </div>
+    {% elif app.reviewed_by %}
+    <p style="font-size: 0.85rem;">Reviewed by {{ app.reviewed_by.get_full_name|default:app.reviewed_by.username }}</p>
+    {% endif %}
+</div>
+{% empty %}
+<div class="card empty-state">
+    <p>No membership applications yet.</p>
+</div>
+{% endfor %}
+{% endblock %}

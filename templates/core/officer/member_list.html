@@ -1,0 +1,72 @@
+{% extends "base.html" %}
+
+{% block title %}Member List - CIO Hub{% endblock %}
+
+{% block content %}
+<div class="card">
+    <div class="layout-row">
+        <h1>👥 Member Directory</h1>
+        <a href="{% url 'officer_dashboard' %}" class="btn btn-secondary">Back to Dashboard</a>
+    </div>
+    <p style="margin-top: 0.5rem;">All registered members and their contact information.</p>
+</div>
+
+<div class="card">
+    <h2> Executive Members</h2>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Email</th>
+                <th>Position</th>
+                <th>Joined</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for member in executives %}
+            <tr>
+                <td>{{ member.get_full_name|default:member.username }}</td>
+                <td>{{ member.email|default:"—" }}</td>
+                <td>{{ member.profile.rank_title|default:"Executive" }}</td>
+                <td>{{ member.profile.date_joined_org }}</td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="4" class="empty-state">No executive members found.</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+<div class="card">
+    <h2> General Members</h2>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Email</th>
+                <th>Role</th>
+                <th>Joined</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for member in members %}
+            <tr>
+                <td>{{ member.get_full_name|default:member.username }}</td>
+                <td>{{ member.email|default:"—" }}</td>
+                <td>
+                    <span class="role-badge {% if member.profile.is_executive %}role-executive{% else %}role-general{% endif %}">
+                        {{ member.profile.get_role_display }}
+                    </span>
+                </td>
+                <td>{{ member.profile.date_joined_org }}</td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="4" class="empty-state">No members found.</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

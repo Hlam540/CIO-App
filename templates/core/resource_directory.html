@@ -1,0 +1,53 @@
+{% extends "base.html" %}
+
+{% block title %}Central Resources - CIO Hub{% endblock %}
+
+{% block content %}
+<div class="card">
+    <div class="layout-row">
+        <div>
+            <h1 class="page-heading">Central Resource Directory</h1>
+            <p class="page-subtitle">One place for your CIO's key links and uploaded files so information does not get buried in chats or email threads.</p>
+        </div>
+        <a href="{% url 'dashboard' %}" class="btn btn-secondary">Back to Dashboard</a>
+    </div>
+</div>
+
+<div class="card" style="display:flex; align-items:center; gap:0.5rem; flex-wrap:wrap;">
+    <strong>Filter by tag:</strong>
+    <a href="{% url 'resource_directory' %}" class="btn {% if not selected_tag %}btn-primary{% else %}btn-secondary{% endif %}" style="padding: 0.3rem 0.8rem; font-size: 0.85rem;">All</a>
+    {% for tag in tags %}
+        <a href="{% url 'resource_directory' %}?tag={{ tag }}" class="btn {% if selected_tag == tag %}btn-primary{% else %}btn-secondary{% endif %}" style="padding: 0.3rem 0.8rem; font-size: 0.85rem;">#{{ tag }}</a>
+    {% endfor %}
+</div>
+
+{% for resource in resources %}
+<div class="card">
+    <div class="layout-row" style="align-items:flex-start;">
+        <div>
+            <h2 style="margin-bottom:0.3rem;">
+                <a href="{{ resource.resource_url }}" target="_blank" rel="noopener noreferrer" style="color:#3559e0;">{{ resource.title }}</a>
+            </h2>
+            {% if resource.description %}
+                <p>{{ resource.description }}</p>
+            {% endif %}
+            <p style="font-size: 0.85rem; margin-top: 0.5rem;">
+                Shared by {{ resource.uploaded_by.get_full_name|default:resource.uploaded_by.username }} · {{ resource.created_at|date:"M d, Y" }}
+            </p>
+            <p style="font-size: 0.85rem; margin-top: 0.35rem;">
+                {% if resource.is_upload %}
+                    Uploaded file
+                {% else %}
+                    External link
+                {% endif %}
+            </p>
+        </div>
+        <span class="role-badge status-approved">#{{ resource.tag }}</span>
+    </div>
+</div>
+{% empty %}
+<div class="card empty-state">
+    <p>No resources have been added yet. Officers can add links or upload files in Document Management.</p>
+</div>
+{% endfor %}
+{% endblock %}

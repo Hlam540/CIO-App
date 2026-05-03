@@ -1,0 +1,197 @@
+{% extends "base.html" %}
+{% load custom_tags %}
+
+{% block title %}Event Calendar - CIO Hub{% endblock %}
+
+{% block content %}
+<div class="card">
+    <div class="layout-row">
+        <div>
+            <h1 class="page-heading">Event Calendar</h1>
+            <p class="page-subtitle">Upcoming meetings and locations in one place.</p>
+        </div>
+        <a href="{% url 'dashboard' %}" class="btn btn-secondary">Back to Dashboard</a>
+    </div>
+</div>
+
+{% if can_manage_events %}
+<div class="card">
+    <h2>Add Event</h2>
+    <form method="POST" style="display:grid; gap:1rem; margin-top:1rem;">
+        {% csrf_token %}
+        <div class="grid-cards">
+            <div>
+                <label class="input-label">Event Title</label>
+                <input type="text" name="title" class="input-field" placeholder="e.g. General Body Meeting" required>
+            </div>
+            <div>
+                <label class="input-label">Date</label>
+                <input type="date" name="event_date" class="input-field" required>
+            </div>
+        </div>
+        <div class="grid-cards">
+            <div>
+                <label class="input-label">Start Time</label>
+                <input type="time" name="start_time" class="input-field">
+            </div>
+            <div>
+                <label class="input-label">Location</label>
+                <input type="text" name="location" class="input-field" placeholder="e.g. Newcomb Hall Room 101" required>
+            </div>
+        </div>
+        <div>
+            <label class="input-label">Description</label>
+            <textarea name="description" class="input-field" rows="3" placeholder="Optional notes for members"></textarea>
+        </div>
+        <button type="submit" class="btn btn-primary" style="justify-self:start;">Add Event</button>
+    </form>
+</div>
+{% endif %}
+
+<div class="card">
+    <h2>Monthly Calendar</h2>
+
+    <table class="table" style="table-layout: fixed;">
+        <thead>
+            <tr>
+                <th>Sun</th>
+                <th>Mon</th>
+                <th>Tue</th>
+                <th>Wed</th>
+                <th>Thu</th>
+                <th>Fri</th>
+                <th>Sat</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for week in calendar %}
+            <tr>
+                {% for day in week %}
+                <td style="vertical-align: top; height: 100px; width: 14.285%;">
+                    {% if day != 0 %}
+                        <strong>{{ day }}</strong>
+
+                        {% with events_by_day|get_item:day as day_events %}
+                            {% if day_events %}
+                                {% for event in day_events %}
+                                    <div style="font-size: 0.8rem; margin-top: 5px;">
+                                        {{ event.title }}
+                                    </div>
+                                {% endfor %}
+                            {% endif %}
+                        {% endwith %}
+                    {% endif %}
+                </td>
+                {% endfor %}
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+<div class="card">
+    <h2>Upcoming Events</h2>
+    <table class="table" style="table-layout: fixed;">
+        <colgroup>
+            <col style="width: 28%;">
+            <col style="width: 14%;">
+            <col style="width: 11%;">
+            <col style="width: 34%;">
+            {% if can_manage_events %}<col style="width: 13%;">{% endif %}
+        </colgroup>
+        <thead>
+            <tr>
+                <th>Event</th>
+                <th>Date</th>
+                <th>Time</th>
+                <th>Location</th>
+                {% if can_manage_events %}<th>Attendance</th>{% endif %}
+            </tr>
+        </thead>
+        <tbody>
+            {% for event in upcoming_events %}
+            <tr>
+                <td>
+                    <strong>{{ event.title }}</strong>
+                    {% if event.description %}
+                        <p style="font-size:0.88rem; margin-top:0.35rem;">{{ event.description }}</p>
+                    {% endif %}
+                </td>
+                <td>{{ event.event_date|date:"M d, Y" }}</td>
+                <td>
+                    {% if event.start_time %}
+                        {{ event.start_time|time:"g:i A" }}
+                    {% else %}
+                        TBA
+                    {% endif %}
+                </td>
+                <td>{{ event.location }}</td>
+                {% if can_manage_events %}
+                <td>
+                    <a href="{% url 'mark_attendance' event.id %}" class="btn btn-primary" style="padding: 0.45rem 0.8rem; font-size: 0.85rem;">Update Attendance</a>
+                </td>
+                {% endif %}
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="{% if can_manage_events %}5{% else %}4{% endif %}" class="empty-state">
+                    No upcoming events yet.
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+{% if can_manage_events %}
+<div class="card">
+    <h2>Past Events</h2>
+    <table class="table" style="table-layout: fixed;">
+        <colgroup>
+            <col style="width: 28%;">
+            <col style="width: 14%;">
+            <col style="width: 11%;">
+            <col style="width: 34%;">
+            <col style="width: 13%;">
+        </colgroup>
+        <thead>
+            <tr>
+                <th>Event</th>
+                <th>Date</th>
+                <th>Time</th>
+                <th>Location</th>
+                <th>Attendance</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for event in past_events %}
+            <tr>
+                <td>
+                    <strong>{{ event.title }}</strong>
+                    {% if event.description %}
+                        <p style="font-size:0.88rem; margin-top:0.35rem;">{{ event.description }}</p>
+                    {% endif %}
+                </td>
+                <td>{{ event.event_date|date:"M d, Y" }}</td>
+                <td>
+                    {% if event.start_time %}
+                        {{ event.start_time|time:"g:i A" }}
+                    {% else %}
+                        TBA
+                    {% endif %}
+                </td>
+                <td>{{ event.location }}</td>
+                <td>
+                    <a href="{% url 'mark_attendance' event.id %}" class="btn btn-primary" style="padding: 0.45rem 0.8rem; font-size: 0.85rem;">Update Attendance</a>
+                </td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="5" class="empty-state">No past events yet.</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endif %}
+{% endblock %}

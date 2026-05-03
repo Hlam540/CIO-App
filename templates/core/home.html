@@ -1,0 +1,34 @@
+{% extends "base.html" %}
+
+{% block title %}CIO Hub - Your Organization's Central Hub{% endblock %}
+
+{% block content %}
+<div class="hero">
+    <h1>Welcome to CIO Hub</h1>
+    <p>The centralized management platform for your academic and professional organizations.<br>
+    Say goodbye to fragmented tools - manage onboarding, resources, attendance, and communication in one place.</p>
+
+    <a href="{% url 'account_login' %}" class="btn btn-primary" style="font-size: 1rem; padding: 0.9rem 2rem;">
+        Sign In
+    </a>
+</div>
+
+<div class="grid-cards">
+    <div class="card feature-card" style="text-align: center;">
+        <h2>📋 Onboarding</h2>
+        <p>Structured plans and checklists for new members and leadership transitions.</p>
+    </div>
+    <div class="card feature-card" style="text-align: center;">
+        <h2>📁 Resources</h2>
+        <p>Centralized document hub with tagging and search for all your org files.</p>
+    </div>
+    <div class="card feature-card" style="text-align: center;">
+        <h2>📊 Engagement</h2>
+        <p>Track attendance, member participation, and engagement trends.</p>
+    </div>
+    <div class="card feature-card" style="text-align: center;">
+        <h2>📢 Communication</h2>
+        <p>Priority alerts and a public interest hub for recruitment.</p>
+    </div>
+</div>
+{% endblock %}

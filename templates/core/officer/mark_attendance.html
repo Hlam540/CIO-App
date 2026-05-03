@@ -1,0 +1,51 @@
+{% extends "base.html" %}
+{% load custom_tags %}
+
+{% block title %}Update Attendance - CIO Hub{% endblock %}
+
+{% block content %}
+<div class="card">
+    <div class="layout-row">
+        <div>
+            <h1 class="page-heading">Update Attendance</h1>
+            <p class="page-subtitle">{{ event.title }} - {{ event.event_date|date:"M d, Y" }}</p>
+        </div>
+        <a href="{% url 'event_calendar' %}" class="btn btn-secondary">Back to Events</a>
+    </div>
+</div>
+
+<div class="card">
+    <div class="subtle-box" style="margin-bottom: 1rem;">
+        <p>This attendance list is for general members only. Attendance is counted only after you click Save Attendance. Checked general members are marked present; unchecked general members are marked absent.</p>
+    </div>
+
+    <form method="POST">
+        {% csrf_token %}
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Email</th>
+                    <th style="text-align:center;">Present</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for member in members %}
+                <tr>
+                    <td>{{ member.get_full_name|default:member.username }}</td>
+                    <td>{{ member.email|default:"--" }}</td>
+                    <td style="text-align:center;">
+                        <input type="checkbox" name="user_{{ member.id }}" {% if existing_records|get_item:member.id %}checked{% endif %}>
+                    </td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="3" class="empty-state">No members are available for attendance.</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        <button type="submit" class="btn btn-primary" style="margin-top:1rem;">Save Attendance</button>
+    </form>
+</div>
+{% endblock %}

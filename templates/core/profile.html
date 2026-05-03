@@ -1,0 +1,116 @@
+{% extends "base.html" %}
+
+{% block title %}My Profile - CIO Hub{% endblock %}
+
+{% block content %}
+<div class="card">
+    <div class="layout-row">
+        <div>
+            <h1 class="page-heading">My Profile</h1>
+            <p class="page-subtitle">Your identity hub for CIO membership, role, milestones, and safety details.</p>
+        </div>
+        <a href="{% url 'dashboard' %}" class="btn btn-secondary">← Back to Dashboard</a>
+    </div>
+</div>
+
+<div class="grid-cards" style="align-items: start;">
+    <div class="card">
+        <h2>Basic Information</h2>
+        <div class="subtle-box">
+            <p><strong>Name:</strong> {{ user.get_full_name|default:user.username }}</p>
+            <p><strong>Email:</strong> {{ user.email }}</p>
+            <p><strong>Member Type:</strong> {{ profile.get_role_display }}</p>
+            <p><strong>Date Joined:</strong> {{ profile.date_joined_org|date:"M d, Y" }}</p>
+            <p><strong>Emergency Contact</strong> {{ profile.emergency_contact_name|default:"Not set" }}</p>
+        </div>
+    </div>
+
+    <div class="card">
+        <h2>CIO Affiliations & Role</h2>
+        <div class="subtle-box">
+            <p><strong>Primary CIO:</strong> {{ profile.organization_name|default:"Not set" }}</p>
+            <p><strong>Rank/Position:</strong> {{ profile.rank_title|default:"Member" }}</p>
+            <p><strong>All CIOs:</strong></p>
+            {% if affiliations %}
+                <div style="display:flex; flex-wrap:wrap; gap:0.45rem; margin-top:0.45rem;">
+                    {% for affiliation in affiliations %}
+                        <span class="role-badge status-approved">{{ affiliation }}</span>
+                    {% endfor %}
+                </div>
+            {% else %}
+                <p class="text-muted">No affiliations entered yet.</p>
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+<div class="card">
+    <h2>Member Milestones</h2>
+    <div class="grid-cards">
+        {% for milestone in milestones %}
+            <div class="subtle-box">
+                <p style="font-weight: 600; color:#25395d;">{{ milestone.label }}</p>
+                {% if milestone.done %}
+                    <span class="role-badge status-approved">Completed</span>
+                {% else %}
+                    <span class="role-badge status-pending">In Progress</span>
+                {% endif %}
+            </div>
+        {% endfor %}
+    </div>
+</div>
+
+<div class="card">
+    <h2>Update Profile Details</h2>
+    <p style="margin-bottom: 1rem;">Emergency contact data is only editable from your own account profile.</p>
+    <form method="POST" style="display:grid; gap:0.9rem;">
+        {% csrf_token %}
+        <div class="grid-cards">
+            <div>
+                <label class="input-label">Primary CIO</label>
+                <input class="input-field" type="text" name="organization_name" value="{{ profile.organization_name }}" placeholder="e.g. CIO Business Society">
+            </div>
+            <div>
+                <label class="input-label">Rank / Position</label>
+                <input class="input-field" type="text" name="rank_title" value="{{ profile.rank_title }}" placeholder="e.g. Member, Treasurer, President">
+            </div>
+        </div>
+
+        <div>
+            <label class="input-label">All CIO Affiliations (comma-separated)</label>
+            <input class="input-field" type="text" name="cios_affiliations" value="{{ profile.cios_affiliations }}" placeholder="e.g. CIO Business Society, Data Club, AMA">
+        </div>
+
+        <div class="grid-cards">
+            <label class="subtle-box" style="display:flex; align-items:center; gap:0.6rem;">
+                <input type="checkbox" name="onboarding_completed" {% if profile.onboarding_completed %}checked{% endif %}>
+                <span>Completed Onboarding</span>
+            </label>
+            <label class="subtle-box" style="display:flex; align-items:center; gap:0.6rem;">
+                <input type="checkbox" name="first_meeting_attended" {% if profile.first_meeting_attended %}checked{% endif %}>
+                <span>First Meeting Attended</span>
+            </label>
+        </div>
+
+        <div class="subtle-box">
+            <h2 style="font-size:1.1rem;">Emergency Contact (for off-campus events)</h2>
+            <div class="grid-cards" style="margin-top:0.7rem;">
+                <div>
+                    <label class="input-label">Contact Name</label>
+                    <input class="input-field" type="text" name="emergency_contact_name" value="{{ profile.emergency_contact_name }}" placeholder="Full name">
+                </div>
+                <div>
+                    <label class="input-label">Relationship</label>
+                    <input class="input-field" type="text" name="emergency_contact_relationship" value="{{ profile.emergency_contact_relationship }}" placeholder="e.g. Parent, Guardian, Partner">
+                </div>
+            </div>
+            <div style="margin-top:0.8rem;">
+                <label class="input-label">Phone Number</label>
+                <input class="input-field" type="text" name="emergency_contact_phone" value="{{ profile.emergency_contact_phone }}" placeholder="e.g. +1 (555) 123-4567">
+            </div>
+        </div>
+
+        <button type="submit" class="btn btn-primary" style="justify-self:start;">Save Profile</button>
+    </form>
+</div>
+{% endblock %}

@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+
+{% block title %}Member Guides - CIO Hub{% endblock %}
+
+{% block content %}
+<div class="card">
+    <div class="layout-row">
+        <h1>📖 New Member Guides</h1>
+        <a href="{% url 'member_dashboard' %}" class="btn btn-secondary">← Back to Dashboard</a>
+    </div>
+    <p style="margin-top: 0.5rem;">Instructions and resources to help you get started and participate effectively.</p>
+</div>
+
+{% for guide in guides %}
+<div class="card">
+    <h2>{{ guide.title }}</h2>
+    <p style="font-size: 0.85rem; margin-bottom: 1rem;">
+        By {{ guide.created_by.get_full_name|default:guide.created_by.username }} · {{ guide.created_at|date:"M d, Y" }}
+    </p>
+    <div style="line-height: 1.8;">{{ guide.content|linebreaks }}</div>
+</div>
+{% empty %}
+<div class="card empty-state">
+    <p>No guides have been published yet. Check back soon!</p>
+</div>
+{% endfor %}
+{% endblock %}

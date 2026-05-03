@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+{% load i18n %}
+
+{% block title %}Login Cancelled - CIO Hub{% endblock %}
+
+{% block content %}
+<div class="card auth-card" style="text-align: center;">
+    <div style="margin-bottom: 1.5rem;">
+        <svg width="56" height="56" viewBox="0 0 24 24" fill="none" stroke="#f39c12" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="10"/>
+            <line x1="15" y1="9" x2="9" y2="15"/>
+            <line x1="9" y1="9" x2="15" y2="15"/>
+        </svg>
+    </div>
+    <h1>Login Cancelled</h1>
+    <p style="margin-bottom: 1.8rem;">You cancelled the sign-in process. If this was a mistake, you can try again below.</p>
+
+    <a href="{% url 'account_login' %}" class="btn btn-primary" style="width: 100%;">Back to Sign In</a>
+</div>
+{% endblock %}

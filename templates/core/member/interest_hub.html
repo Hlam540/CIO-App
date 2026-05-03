@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+
+{% block title %}Interest Hub - CIO Hub{% endblock %}
+
+{% block content %}
+<div class="card">
+    <div class="layout-row">
+        <h1>🌟 Interest Hub</h1>
+        <a href="{% url 'member_dashboard' %}" class="btn btn-secondary">← Back to Dashboard</a>
+    </div>
+</div>
+
+<div class="card">
+    <h2>Our Mission</h2>
+    <p style="font-size: 1.1rem; line-height: 1.8; margin-top: 0.5rem;">
+        We are a Contracted Independent Organization dedicated to fostering collaboration, professional development,
+        and community among our members. Our goal is to provide structured opportunities for growth, leadership,
+        and meaningful engagement within the university community.
+    </p>
+</div>
+
+<div class="card">
+    <h2>What We Focus On</h2>
+    <div class="grid-cards" style="margin-top: 1rem;">
+        <div class="subtle-box" style="padding: 1.3rem; border-left: 4px solid #3559e0;">
+            <h3 style="margin-bottom: 0.5rem;">Community</h3>
+            <p>We create a welcoming space where members can connect, collaborate, and stay engaged with the organization.</p>
+        </div>
+        <div class="subtle-box" style="padding: 1.3rem; border-left: 4px solid #3559e0;">
+            <h3 style="margin-bottom: 0.5rem;">Growth</h3>
+            <p>We support professional development through shared resources, member guidance, and structured opportunities.</p>
+        </div>
+        <div class="subtle-box" style="padding: 1.3rem; border-left: 4px solid #3559e0;">
+            <h3 style="margin-bottom: 0.5rem;">Leadership</h3>
+            <p>We help members build confidence, take initiative, and contribute meaningfully to the university community.</p>
+        </div>
+    </div>
+</div>
+{% endblock %}

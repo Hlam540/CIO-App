@@ -1,0 +1,55 @@
+{% extends "base.html" %}
+
+{% block title %}Member Guide Management - CIO Hub{% endblock %}
+
+{% block content %}
+<div class="card">
+    <div class="layout-row">
+        <div>
+            <h1 class="page-heading">Member Guide Management</h1>
+            <p class="page-subtitle">Publish onboarding instructions so new members understand expectations and first-step tasks.</p>
+        </div>
+        <a href="{% url 'officer_dashboard' %}" class="btn btn-secondary">Back to Dashboard</a>
+    </div>
+</div>
+
+<div class="card">
+    <h2>Create New Guide</h2>
+    <form method="POST" style="display:grid; gap:1rem; margin-top:1rem;">
+        {% csrf_token %}
+        <div>
+            <label class="input-label">Guide Title</label>
+            <input type="text" name="title" class="input-field" placeholder="e.g. First Week Checklist" required>
+        </div>
+        <div>
+            <label class="input-label">Guide Content</label>
+            <textarea name="content" class="input-field" rows="10" placeholder="Outline expectations, onboarding steps, important links, and common first tasks." required></textarea>
+        </div>
+        <button type="submit" class="btn btn-primary" style="justify-self:start;">Publish Guide</button>
+    </form>
+</div>
+
+{% for guide in guides %}
+<div class="card">
+    <div class="layout-row" style="align-items:flex-start;">
+        <div style="flex:1;">
+            <h2>{{ guide.title }}</h2>
+            <p style="font-size: 0.85rem; margin-bottom: 1rem;">
+                By {{ guide.created_by.get_full_name|default:guide.created_by.username }} · {{ guide.created_at|date:"M d, Y" }}
+            </p>
+            <div style="line-height:1.8;">{{ guide.content|linebreaks }}</div>
+        </div>
+        <form method="POST">
+            {% csrf_token %}
+            <input type="hidden" name="action" value="delete">
+            <input type="hidden" name="guide_id" value="{{ guide.id }}">
+            <button type="submit" class="btn btn-danger">Delete</button>
+        </form>
+    </div>
+</div>
+{% empty %}
+<div class="card empty-state">
+    <p>No guides published yet. Create your first onboarding guide above.</p>
+</div>
+{% endfor %}
+{% endblock %}

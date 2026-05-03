@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+
+{% block title %}Confirm Email - CIO Hub{% endblock %}
+
+{% block content %}
+<div class="card auth-card" style="text-align: center;">
+    <h1>Confirm Email Address</h1>
+    {% if confirmation %}
+        <p style="margin-bottom: 1.8rem;">Please confirm that <strong>{{ confirmation.email_address.email }}</strong> is your email address.</p>
+        <form method="POST" action="{% url 'account_confirm_email' confirmation.key %}">
+            {% csrf_token %}
+            <button type="submit" class="btn btn-primary" style="width: 100%;">Confirm</button>
+        </form>
+    {% else %}
+        <p style="margin-bottom: 1.8rem;">This confirmation link is invalid or has expired.</p>
+        <a href="{% url 'account_login' %}" class="btn btn-primary" style="width: 100%;">Back to Sign In</a>
+    {% endif %}
+</div>
+{% endblock %}

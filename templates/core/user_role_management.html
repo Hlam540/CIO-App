@@ -1,0 +1,80 @@
+{% extends "base.html" %}
+
+{% block title %}Role Management - CIO Hub{% endblock %}
+
+{% block content %}
+<style>
+    .admin-status-column {
+        text-align: center;
+    }
+</style>
+
+<div class="card">
+    <div class="layout-row">
+        <div>
+            <h1 class="page-heading">User Role Management</h1>
+            <p class="page-subtitle">Review users and switch their app role between General Member and Executive Member.</p>
+        </div>
+        <span class="role-badge" style="background: #eef2ff; color: #3146a3; border: 1px solid #cbd6ff;">User Administrator</span>
+    </div>
+</div>
+
+<div class="card">
+    <div class="subtle-box" style="margin-bottom: 1rem;">
+        <p>
+            This area is limited to role administration. App role and User Administrator are separate:
+            User Administrator is a backend-assigned permission and does not replace a user's app role.
+            This page cannot create or assign additional User Administrators.
+        </p>
+    </div>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Email</th>
+                <th>App Role</th>
+                <th class="admin-status-column">User Administrator</th>
+                <th>Change App Role</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for account in profiles %}
+                <tr>
+                    <td>{{ account.get_full_name|default:account.username }}</td>
+                    <td>{{ account.email|default:"--" }}</td>
+                    <td>
+                        {% if account.profile.is_executive %}
+                            <span class="role-badge role-executive">Executive Member</span>
+                        {% else %}
+                            <span class="role-badge role-general">General Member</span>
+                        {% endif %}
+                    </td>
+                    <td class="admin-status-column">
+                        {% if account.profile.is_user_admin %}
+                            <span class="role-badge" style="background: #eef2ff; color: #3146a3; border: 1px solid #cbd6ff;">Yes</span>
+                        {% else %}
+                            <span class="text-muted">No</span>
+                        {% endif %}
+                    </td>
+                    <td>
+                        <form method="post" style="display: flex; gap: 0.65rem; align-items: center; flex-wrap: wrap;">
+                            {% csrf_token %}
+                            <input type="hidden" name="user_id" value="{{ account.id }}">
+                            <select name="role" class="input-field" style="max-width: 220px;">
+                                <option value="general" {% if account.profile.is_general %}selected{% endif %}>General Member</option>
+                                <option value="executive" {% if account.profile.is_executive %}selected{% endif %}>Executive Member</option>
+                            </select>
+                            <button type="submit" class="btn btn-primary">Save Role</button>
+                        </form>
+                    </td>
+                </tr>
+            {% empty %}
+                <tr>
+                    <td colspan="5" class="empty-state">No users available for role management.</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

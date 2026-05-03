@@ -1,0 +1,82 @@
+{% extends "base.html" %}
+
+{% block title %}Exec Onboarding - CIO Hub{% endblock %}
+
+{% block content %}
+<div class="card">
+    <div class="layout-row">
+        <h1>Exec Onboarding</h1>
+        <a href="{% url 'officer_dashboard' %}" class="btn btn-secondary">Back to Dashboard</a>
+    </div>
+    <p style="margin-top: 0.5rem;">Tag and organize resource links & documents for exec onboarding, & view onboarding resources.</p>
+</div>
+
+<div class="card">
+    <h2>Add New Resource</h2>
+    <form method="POST" enctype="multipart/form-data" style="display: grid; gap: 1rem; margin-top: 1rem;">
+        {% csrf_token %}
+        <div class="grid-cards">
+            <div>
+                <label class="input-label">Title</label>
+                <input type="text" name="title" required placeholder="e.g. President Transition Notes" class="input-field">
+            </div>
+            <div>
+                <label class="input-label">Position Tag</label>
+                <input type="text" name="tag" required placeholder="e.g. President, Vice President, Treasurer" class="input-field">
+            </div>
+        </div>
+        <div>
+            <label class="input-label">URL</label>
+            <input type="url" name="url" placeholder="https://docs.google.com/..." class="input-field">
+        </div>
+        <div>
+            <label class="input-label">Upload File</label>
+            <input type="file" name="file" class="input-field">
+        </div>
+        <div>
+            <label class="input-label">Description (optional)</label>
+            <input type="text" name="description" placeholder="Brief description of this resource" class="input-field">
+        </div>
+        <p class="text-muted">Provide either a URL or an uploaded file. Uploaded files will use Django's configured storage, which is S3 when enabled.</p>
+        <button type="submit" class="btn btn-primary" style="justify-self: start;">Add Resource</button>
+    </form>
+</div>
+
+{% if tags %}
+<div class="card" style="display: flex; align-items: center; gap: 0.5rem; flex-wrap: wrap;">
+    <strong>Filter by tag:</strong>
+    <a href="{% url 'exec_onboarding' %}" class="btn {% if not selected_tag %}btn-primary{% else %}btn-secondary{% endif %}" style="padding: 0.3rem 0.8rem; font-size: 0.85rem;">All</a>
+    {% for tag in tags %}
+    <a href="{% url 'exec_onboarding' %}?tag={{ tag }}" class="btn {% if selected_tag == tag %}btn-primary{% else %}btn-secondary{% endif %}" style="padding: 0.3rem 0.8rem; font-size: 0.85rem;">#{{ tag }}</a>
+    {% endfor %}
+</div>
+{% endif %}
+
+{% for doc in documents %}
+<div class="card">
+    <div class="layout-row" style="align-items: flex-start;">
+        <div>
+            <h2 style="margin-bottom: 0.3rem;">
+                <a href="{{ doc.resource_url }}" target="_blank" rel="noopener noreferrer" style="color: #3559e0;">{{ doc.title }}</a>
+            </h2>
+            {% if doc.description %}<p>{{ doc.description }}</p>{% endif %}
+            <p style="font-size: 0.85rem; margin-top: 0.5rem;">
+                Added by {{ doc.uploaded_by.get_full_name|default:doc.uploaded_by.username }} · {{ doc.created_at|date:"M d, Y" }}
+            </p>
+            <p style="font-size: 0.85rem; margin-top: 0.35rem;">
+                {% if doc.is_upload %}
+                    Stored file: {{ doc.file.name }}
+                {% else %}
+                    External link
+                {% endif %}
+            </p>
+        </div>
+        <span class="role-badge status-approved">#{{ doc.tag }}</span>
+    </div>
+</div>
+{% empty %}
+<div class="card empty-state">
+    <p>No resources yet. Add your first link or file above.</p>
+</div>
+{% endfor %}
+{% endblock %}

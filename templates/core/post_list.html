@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+
+{% block title %}Messages - CIO Hub{% endblock %}
+
+{% block content %}
+<div class="card">
+    <div class="layout-row">
+        <div>
+            <h1 class="page-heading">Messages</h1>
+            <p class="page-subtitle">Organization updates and member-created discussion threads in one place.</p>
+        </div>
+        <div style="display:flex; gap:0.75rem;">
+            <a href="{% url 'create_post' %}" class="btn btn-primary">Start Thread</a>
+            <a href="{% url 'dashboard' %}" class="btn btn-secondary">Back to Dashboard</a>
+        </div>
+    </div>
+</div>
+
+{% for post in posts %}
+<div class="card">
+    <h2 style="margin-bottom:0.35rem;">
+        <a href="{% url 'post_detail' post.id %}" style="color:#3559e0;">{{ post.message_title }}</a>
+    </h2>
+    <p style="margin-bottom:0.7rem;">{{ post.message_content|truncatechars:180 }}</p>
+    <p style="font-size:0.8rem;">
+        Posted on {{ post.message_time|date:"M d, Y g:i A" }} by {{ post.message_author.get_full_name|default:post.message_author.username }}
+        <span style="display:inline-block; margin-left:0.5rem; padding:0.15rem 0.5rem; border-radius:999px; background:{% if post.message_author.profile.is_executive %}#1e3a8a{% else %}#475569{% endif %}; color:#fff; font-size:0.75rem; font-weight:600;">
+            {{ post.message_author.profile.get_role_display }}
+        </span>
+    </p>
+    <p style="font-size:0.8rem; margin-top:0.4rem;">
+        {{ post.comments.count }} repl{{ post.comments.count|pluralize:"y,ies" }}
+    </p>
+</div>
+{% empty %}
+<div class="card empty-state">
+    <p>No posts yet.</p>
+</div>
+{% endfor %}
+{% endblock %}

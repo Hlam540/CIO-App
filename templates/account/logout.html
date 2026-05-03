@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+
+{% block title %}Sign Out - CIO Hub{% endblock %}
+
+{% block content %}
+<div class="card auth-card" style="text-align: center;">
+    <div style="margin-bottom: 1.5rem;">
+        <svg width="56" height="56" viewBox="0 0 24 24" fill="none" stroke="#60708f" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/>
+            <polyline points="16 17 21 12 16 7"/>
+            <line x1="21" y1="12" x2="9" y2="12"/>
+        </svg>
+    </div>
+    <h1>Sign Out</h1>
+    <p style="margin-bottom: 1.8rem;">Are you sure you want to sign out of CIO Hub?</p>
+
+    <form method="POST" action="{% url 'account_logout' %}">
+        {% csrf_token %}
+        <button type="submit" class="btn btn-danger" style="width: 100%; margin-bottom: 0.8rem;">Yes, Sign Me Out</button>
+    </form>
+    <a href="{% url 'dashboard' %}" class="btn btn-secondary" style="width: 100%; text-align: center;">Cancel</a>
+</div>
+{% endblock %}
